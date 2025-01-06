@@ -19,6 +19,15 @@ export default function App() {
     );
   }
 
+  function handleClearList() {
+    console.log("triggered");
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete all items?"
+    );
+    if (confirmed) setItems([]);
+  }
+
   return (
     <div className="app">
       <Logo />
@@ -27,6 +36,7 @@ export default function App() {
         items={items}
         onDeleteItem={handleDeleteItem}
         onToggleItem={handleToggleItem}
+        onClearList={handleClearList}
       />
       <Stats items={items} />
     </div>
@@ -56,8 +66,6 @@ function Form({ onAddItems }) {
     <form className="add-form" onSubmit={handleSubmit}>
       <h3>What do you need for your 😍 trip?</h3>
       <select
-        name=""
-        id=""
         value={quantity}
         onChange={(e) => setQuantity(Number(e.target.value))}
       >
@@ -79,11 +87,27 @@ function Form({ onAddItems }) {
   );
 }
 
-function PackingList({ items, onDeleteItem, onToggleItem }) {
+function PackingList({ items, onDeleteItem, onToggleItem, onClearList }) {
+  const [sortBy, setSortBy] = useState("description");
+
+  let sortedItems;
+  if (sortBy === "description")
+    sortedItems = items
+      .slice()
+      .sort((a, b) => a.description.localeCompare(b.description));
+
+  if (sortBy === "quantity")
+    sortedItems = items.slice().sort((a, b) => a.quantity - b.quantity);
+
+  if (sortBy === "packed")
+    sortedItems = items
+      .slice()
+      .sort((a, b) => Number(a.packed) - Number(b.packed));
+
   return (
     <div className="list">
       <ul>
-        {items?.map((item) => (
+        {sortedItems?.map((item) => (
           <Item
             item={item}
             key={item.id}
@@ -92,6 +116,14 @@ function PackingList({ items, onDeleteItem, onToggleItem }) {
           />
         ))}
       </ul>
+      <div className="actions">
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="description">Description</option>
+          <option value="quantity">Quantity</option>
+          <option value="packed">Packed</option>
+        </select>
+        <button onClick={onClearList}>Clear List</button>
+      </div>
     </div>
   );
 }
