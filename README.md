@@ -64,5 +64,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 For any inquiries or support, please contact:
 
-- **GitHub**: [melvinprince](https://github.com/melvinprince)
+- **Portfolio**: [melvinprince](https://melvinprince.io)
 ```
